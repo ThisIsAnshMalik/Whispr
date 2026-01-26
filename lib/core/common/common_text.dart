@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 // ignore: must_be_immutable
@@ -23,7 +24,7 @@ class CommonText extends StatelessWidget {
     this.decorationColor = AppPallete.whiteColor,
     this.textAlign = TextAlign.start,
     this.fontWeight = FontWeight.w400,
-    this.fonts = "Noto",
+    this.fonts = "Montserrat",
     this.children,
     this.textDecoration = TextDecoration.none,
   });
@@ -33,12 +34,11 @@ class CommonText extends StatelessWidget {
     return Text.rich(
       TextSpan(
         text: text,
-        style: TextStyle(
+        style: GoogleFonts.montserrat(
           wordSpacing: 1,
           letterSpacing: 0.5,
-          fontFamily: fonts,
           decoration: textDecoration,
-          fontSize: fontSize + 0.002.sh,
+          fontSize: fontSize + 0.00.sh,
           color: color,
           fontWeight: fontWeight,
           decorationColor: decorationColor,

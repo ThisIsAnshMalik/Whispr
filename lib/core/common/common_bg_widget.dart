@@ -19,23 +19,28 @@ class CommonBgWidget extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: [
-                AppPallete.primaryColor.withOpacity(0.4),
-                AppPallete.secondaryColor.withOpacity(0.07),
+                AppPallete.primaryColor.withOpacity(0.8),
+                AppPallete.secondaryColor.withOpacity(0.4),
               ],
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF452A7C).withOpacity(0.25),
+                color: const Color(0xFF452A7C).withOpacity(0.1),
                 offset: const Offset(0, 1.32),
                 blurRadius: 32.98,
                 spreadRadius: 0,
               ),
             ],
           ),
-          child: child,
+          child: SafeArea(
+            bottom: false,
+            left: false,
+            right: false,
+            child: child,
+          ),
         ),
       ),
     );
