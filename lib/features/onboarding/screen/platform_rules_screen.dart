@@ -5,12 +5,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
+import 'package:whispr_app/features/auth/login_screen.dart';
 
 class PlatformRulesScreen extends StatelessWidget {
   const PlatformRulesScreen({super.key});
 
   void _completeOnboarding(BuildContext context) {
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
