@@ -9,6 +9,7 @@ class CommonText extends StatelessWidget {
   final Color color;
   final double fontSize;
   final FontWeight fontWeight;
+
   final TextAlign textAlign;
   final Color decorationColor;
   final TextDecoration textDecoration;

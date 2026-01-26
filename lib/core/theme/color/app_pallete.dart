@@ -3,6 +3,8 @@ import 'dart:ui';
 class AppPallete {
   static const Color whiteColor = Color(0xFFffffff);
 
+  static const Color whiteButtonColor = Color(0xFFF4F1FF);
+
   static const Color blackColor = Color(0xFF000000);
 
   static const Color blackTextColor = Color(0xFF323232);

@@ -6,6 +6,7 @@ import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/features/onboarding/widgets/onboarding_page_1.dart';
 import 'package:whispr_app/features/onboarding/widgets/onboarding_page_2.dart';
 import 'package:whispr_app/features/onboarding/widgets/onboarding_page_3.dart';
+import 'package:whispr_app/features/onboarding/screen/platform_rules_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -31,16 +32,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      _completeOnboarding();
+      _navigateToPlatformRules();
     }
   }
 
   void _skipOnboarding() {
-    _completeOnboarding();
+    _navigateToPlatformRules();
   }
 
-  void _completeOnboarding() {
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+  void _navigateToPlatformRules() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const PlatformRulesScreen(),
+      ),
+    );
   }
 
   @override
