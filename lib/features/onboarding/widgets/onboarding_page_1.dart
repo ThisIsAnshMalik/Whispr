@@ -63,7 +63,7 @@ class OnboardingPage1 extends StatelessWidget {
                     borderRadius: BorderRadius.circular(35.r),
                   ),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 83, sigmaY: 83),
+                    filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

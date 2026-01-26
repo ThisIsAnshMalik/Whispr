@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whispr_app/core/assets/icon_assets.dart';
+import 'package:whispr_app/core/common/common_auth_header.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/auth/login/widgets/auth_action_button.dart';
@@ -100,22 +101,19 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(horizontal: 0.06.sw),
           child: Column(
             children: [
-              AuthHeader(
-                title: 'WHISPR',
-                subtitle: 'Welcome back, it\'s safe\nto share quietly',
+              CommonAuthHeader(
+                title: 'Welcome back, it’s safe to\nshare quietly',
               ),
-              SizedBox(height: 0.05.sh),
-              // Email Input Field
+              SizedBox(height: 0.03.sh),
               AuthInputField(
                 label: 'Email Address',
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 suffixIcon: _isEmailValid ? const EmailValidationIcon() : null,
               ),
-              SizedBox(height: 0.025.sh),
-              // Password Input Field
+              SizedBox(height: 0.02.sh),
               AuthInputField(
-                label: 'Password',
+                label: 'Enter your password',
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 suffixIcon: PasswordVisibilityToggle(
@@ -126,21 +124,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 0.015.sh),
-              // Forgot Password Link
-              ForgotPasswordLink(
-                onTap: () {
-                  // Handle forgot password
-                },
-              ),
-              SizedBox(height: 0.04.sh),
-              // Login Button
+              SizedBox(height: 0.01.sh),
+              ForgotPasswordLink(onTap: () {}),
+              SizedBox(height: 0.02.sh),
               AuthActionButton(
                 text: 'Login',
                 onTap: () => _handleLogin(context),
-                isGradient: true,
+                isGradient: false,
               ),
-              SizedBox(height: 0.025.sh),
+              SizedBox(height: 0.02.sh),
               // Sign Up Link
               AuthNavigationLink(
                 prefixText: 'Don\'t have an account? ',
@@ -152,10 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
               ),
-              SizedBox(height: 0.04.sh),
+              SizedBox(height: 0.01.sh),
               // OR Separator
               const OrSeparator(),
-              SizedBox(height: 0.04.sh),
+              SizedBox(height: 0.01.sh),
               // Google Sign Up Button
               SocialButton(
                 icon: IconAssets.googleIcon,
@@ -180,5 +172,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }

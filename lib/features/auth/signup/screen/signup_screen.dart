@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whispr_app/core/assets/icon_assets.dart';
+import 'package:whispr_app/core/common/common_auth_header.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/auth/login/screen/login_screen.dart';
@@ -13,7 +14,6 @@ import 'package:whispr_app/features/auth/login/widgets/email_validation_icon.dar
 import 'package:whispr_app/features/auth/login/widgets/or_separator.dart';
 import 'package:whispr_app/features/auth/login/widgets/password_visibility_toggle.dart';
 import 'package:whispr_app/features/auth/login/widgets/social_button.dart';
-import 'package:whispr_app/features/auth/signup/widgets/signup_auth_header.dart';
 import 'package:whispr_app/features/onboarding/screen/platform_rules_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -33,7 +33,6 @@ class _SignupScreenState extends State<SignupScreen> {
   void initState() {
     super.initState();
     _emailController.addListener(_validateEmail);
-    // Pre-fill with example data as shown in the design
     _emailController.text = 'john_lesly10@gmail.com';
     _validateEmail();
   }
@@ -68,12 +67,10 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // For now, navigate to platform rules screen
     _navigateToPlatformRules(context);
   }
 
   void _handleSocialSignup(BuildContext context, String provider) {
-    // For now, navigate to platform rules screen
     _navigateToPlatformRules(context);
   }
 
@@ -106,20 +103,17 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: EdgeInsets.symmetric(horizontal: 0.06.sw),
           child: Column(
             children: [
-              SignupAuthHeader(
-                title: 'Create an account',
-                subtitle: 'Share only when you\'re ready',
+              CommonAuthHeader(
+                title: 'Create an account\nShare only when you’re ready',
               ),
-              SizedBox(height: 0.05.sh),
-              // Email Input Field
+              SizedBox(height: 0.03.sh),
               AuthInputField(
                 label: 'Email Address',
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 suffixIcon: _isEmailValid ? const EmailValidationIcon() : null,
               ),
-              SizedBox(height: 0.025.sh),
-              // Password Input Field
+              SizedBox(height: 0.02.sh),
               AuthInputField(
                 label: 'Enter your password',
                 controller: _passwordController,
@@ -132,25 +126,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 0.04.sh),
-              // Create Account Button
+              SizedBox(height: 0.03.sh),
               AuthActionButton(
                 text: 'Create Account',
                 onTap: () => _handleSignup(context),
                 isGradient: false,
               ),
-              SizedBox(height: 0.025.sh),
-              // Sign In Link
+              SizedBox(height: 0.02.sh),
               AuthNavigationLink(
                 prefixText: 'Already have an account? ',
                 linkText: 'Sign In',
                 onTap: () => _navigateToLogin(context),
               ),
-              SizedBox(height: 0.04.sh),
-              // OR Separator
+              SizedBox(height: 0.01.sh),
               const OrSeparator(),
-              SizedBox(height: 0.04.sh),
-              // Google Sign Up Button
+              SizedBox(height: 0.01.sh),
               SocialButton(
                 icon: IconAssets.googleIcon,
                 text: 'Sign up with Google',
@@ -158,8 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 textColor: AppPallete.blackTextColor,
                 onTap: () => _handleSocialSignup(context, 'Google'),
               ),
-              SizedBox(height: 0.02.sh),
-              // Apple Sign Up Button
+              SizedBox(height: 0.01.sh),
               SocialButton(
                 icon: IconAssets.appleIcon,
                 text: 'Sign up with Apple',
