@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whispr_app/core/assets/image_assets.dart';
@@ -15,97 +17,130 @@ class OnboardingPage3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      padding: EdgeInsets.symmetric(horizontal: 0.024.sw),
       child: Column(
         children: [
-          SizedBox(height: 40.h),
+          SizedBox(height: 0.02.sh),
           // Circular image
           Container(
-            width: 300.w,
-            height: 300.h,
+            width: double.infinity,
+            height: 0.4.sh,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: AssetImage(ImageAssets.onBoardingImg3),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),
-          SizedBox(height: 40.h),
+          SizedBox(height: 0.02.sh),
           // Content card
           Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(24.r),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 0.024.sw,
+                vertical: 0.02.sh,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20.h),
-                  // Title
-                  CommonText(
-                    text:
-                        'You\'re not alone —\nthis is a safe space to\nshare quietly.',
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppPallete.whiteColor,
-                    textAlign: TextAlign.left,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(35.r),
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 0.035.sw,
+                    vertical: 0.015.sh,
                   ),
-                  SizedBox(height: 16.h),
-                  // Body text
-                  CommonText(
-                    text:
-                        'Some thoughts are too heavy to carry by\nyourself. Take a moment. Speak when\nyou\'re ready.',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppPallete.whiteColor.withOpacity(0.9),
-                    textAlign: TextAlign.left,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppPallete.whiteColor,
+                        AppPallete.whiteColor.withOpacity(0),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(35.r),
                   ),
-
-                  // Navigation buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: onSkip,
-                        child: CommonText(
-                          text: 'Skip',
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 83, sigmaY: 83),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 0.02.sh),
+                        // Title
+                        CommonText(
+                          text: 'You Are Truly Heard Here — Even Without Words',
+                          fontSize: 0.034.sh,
+                          fontWeight: FontWeight.w700,
                           color: AppPallete.whiteColor,
+                          textAlign: TextAlign.left,
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: onNext,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[300],
-                          foregroundColor: Colors.grey[800],
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 32.w,
-                            vertical: 12.h,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        child: CommonText(
-                          text: 'Next',
-                          fontSize: 16.sp,
+                        SizedBox(height: 0.016.sh),
+                        // Body text
+                        CommonText(
+                          text:
+                              'You don’t have to carry it alone. Others are here to listen and respond with care. Share when you’re ready.',
+                          fontSize: 0.016.sh,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey[800]!,
+                          color: AppPallete.whiteColor,
+                          textAlign: TextAlign.left,
                         ),
-                      ),
-                    ],
+
+                        // Navigation buttons
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 0.02.sh,
+                            horizontal: 0.03.sw,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: onSkip,
+                                child: CommonText(
+                                  text: 'Skip',
+                                  fontSize: 0.018.sh,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppPallete.whiteColor,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: onNext,
+                                child: Container(
+                                  width: 0.2.sw,
+                                  height: 0.07.sh,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        AppPallete.whiteColor.withOpacity(0.9),
+                                        AppPallete.whiteColor.withOpacity(0.6),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(23.r),
+                                  ),
+                                  child: Center(
+                                    child: CommonText(
+                                      text: 'Next',
+                                      fontSize: 0.018.sh,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppPallete.blackTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  // SizedBox(height: 20.h),
-                ],
+                ),
               ),
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 0.02.sh),
         ],
       ),
     );

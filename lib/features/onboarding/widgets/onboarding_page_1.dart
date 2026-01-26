@@ -29,7 +29,7 @@ class OnboardingPage1 extends StatelessWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: AssetImage(ImageAssets.onBoardingImg1),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),
