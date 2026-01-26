@@ -8,7 +8,7 @@ import 'package:whispr_app/core/assets/image_assets.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
-import 'package:whispr_app/features/auth/login_screen.dart';
+import 'package:whispr_app/features/auth/login/screen/login_screen.dart';
 import 'package:whispr_app/features/onboarding/screen/platform_rules_screen.dart';
 
 class SignupScreen extends StatefulWidget {
