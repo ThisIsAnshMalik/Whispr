@@ -14,6 +14,7 @@ import 'package:whispr_app/features/auth/login/widgets/email_validation_icon.dar
 import 'package:whispr_app/features/auth/login/widgets/or_separator.dart';
 import 'package:whispr_app/features/auth/login/widgets/password_visibility_toggle.dart';
 import 'package:whispr_app/features/auth/login/widgets/social_button.dart';
+import 'package:whispr_app/features/dashboard/dashboard_screen.dart';
 import 'package:whispr_app/features/onboarding/screen/platform_rules_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -67,17 +68,19 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    _navigateToPlatformRules(context);
+    // Navigate to dashboard after successful signup
+    _navigateToDashboard(context);
   }
 
   void _handleSocialSignup(BuildContext context, String provider) {
-    _navigateToPlatformRules(context);
+    // Navigate to dashboard after successful social signup
+    _navigateToDashboard(context);
   }
 
-  void _navigateToPlatformRules(BuildContext context) {
+  void _navigateToDashboard(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const PlatformRulesScreen()),
+      MaterialPageRoute(builder: (_) => const DashboardScreen()),
     );
   }
 
