@@ -19,8 +19,8 @@ class CommonBgWidget extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
               colors: [
                 AppPallete.primaryColor.withOpacity(0.8),
                 AppPallete.secondaryColor.withOpacity(0.4),
