@@ -15,4 +15,6 @@ class IconAssets {
   static const String favIcon = 'assets/icons/fav_icon.svg';
   static const String flagIcon = 'assets/icons/flag_icon.svg';
   static const String playIcon = 'assets/icons/play_icon.svg';
+  static const String audioWaveIcon1 = 'assets/icons/audio_wave_icon_1.svg';
+  static const String audioWaveIcon2 = 'assets/icons/audio_wave_icon_2.svg';
 }

@@ -5,4 +5,6 @@ class ImageAssets {
   static const String whisprImage = 'assets/images/whispr_image.png';
 
   static const String userProfileImg = 'assets/images/user_profile_img.jpg';
+  static const String videoExImg = 'assets/images/video_ex_img.png';
+  static const String audioExImg = 'assets/images/audio_ex_img.png';
 }
