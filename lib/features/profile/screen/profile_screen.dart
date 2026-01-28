@@ -9,6 +9,7 @@ import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
+import 'package:whispr_app/features/change_password/screen/change_password_screen.dart';
 import 'package:whispr_app/features/profile/widgets/profile_nav_button.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -53,15 +54,42 @@ class ProfileScreen extends StatelessWidget {
                 spacing: 0.01.sh,
                 children: [
                   ProfileNavButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen(),
+                        ),
+                      );
+                    },
                     title: 'My Confessions',
                     icon: IconAssets.confessionIcon,
                   ),
 
                   ProfileNavButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen(),
+                        ),
+                      );
+                    },
                     title: 'Change Password',
                     icon: IconAssets.lockIcon,
                   ),
-                  ProfileNavButton(title: 'About', icon: IconAssets.aboutIcon),
+                  ProfileNavButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen(),
+                        ),
+                      );
+                    },
+                    title: 'About',
+                    icon: IconAssets.aboutIcon,
+                  ),
 
                   Container(
                     width: double.infinity,
