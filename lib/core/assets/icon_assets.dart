@@ -17,4 +17,11 @@ class IconAssets {
   static const String playIcon = 'assets/icons/play_icon.svg';
   static const String audioWaveIcon1 = 'assets/icons/audio_wave_icon_1.svg';
   static const String audioWaveIcon2 = 'assets/icons/audio_wave_icon_2.svg';
+
+  //profile icons
+  static const String confessionIcon = 'assets/icons/confession_icon.svg';
+  static const String aboutIcon = 'assets/icons/about_icon.svg';
+  static const String lockIcon = 'assets/icons/lock_icon.svg';
+  static const String logoutIcon = 'assets/icons/logout_icon.svg';
+  static const String deleteIcon = 'assets/icons/delete_icon.svg';
 }

@@ -10,7 +10,7 @@ import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/home/home_screen.dart';
 import 'package:whispr_app/features/dashboard/share_confession_screen.dart';
-import 'package:whispr_app/features/dashboard/profile_screen.dart';
+import 'package:whispr_app/features/profile/screen/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, this.index = 0});
