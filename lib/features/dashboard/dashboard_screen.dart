@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:whispr_app/core/common/common_filter_box.dart';
 import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
-import 'package:whispr_app/features/dashboard/home_screen.dart';
+import 'package:whispr_app/features/home/home_screen.dart';
 import 'package:whispr_app/features/dashboard/share_confession_screen.dart';
 import 'package:whispr_app/features/dashboard/profile_screen.dart';
 
