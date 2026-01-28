@@ -100,10 +100,10 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              SvgPicture.asset(IconAssets.logoutIcon),
+                              SvgPicture.asset(IconAssets.deleteIcon),
                               SizedBox(width: 0.02.sw),
                               CommonText(
-                                text: "Logout Account",
+                                text: "Delete Account",
                                 fontSize: 0.016.sh,
                                 fontWeight: FontWeight.w600,
                                 color: AppPallete.blackTextColor,
