@@ -67,9 +67,66 @@ class PostCard extends StatelessWidget {
                   ),
                 ),
               if (isMyPost)
-                Container(
-                  padding: EdgeInsets.all(0.01.sh),
-                  child: SvgPicture.asset(IconAssets.menuIcon),
+                GestureDetector(
+                  onTapDown: (details) {
+                    final position = RelativeRect.fromLTRB(
+                      details.globalPosition.dx,
+                      details.globalPosition.dy,
+                      MediaQuery.of(context).size.width -
+                          details.globalPosition.dx,
+                      MediaQuery.of(context).size.height -
+                          details.globalPosition.dy,
+                    );
+                    showMenu<String>(
+                      context: context,
+                      position: position,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      color: AppPallete.whiteColor,
+                      elevation: 8,
+                      items: [
+                        PopupMenuItem<String>(
+                          value: 'edit',
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(IconAssets.editConfessionIcon),
+                              SizedBox(width: 0.02.sw),
+                              CommonText(
+                                text: 'Edit Confession',
+                                fontSize: 0.012.sh,
+                                fontWeight: FontWeight.w600,
+                                color: AppPallete.blackTextColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(IconAssets.deleteConfessionIcon),
+                              SizedBox(width: 0.02.sw),
+                              CommonText(
+                                text: 'Delete Confession',
+                                fontSize: 0.012.sh,
+                                fontWeight: FontWeight.w600,
+                                color: AppPallete.blackTextColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ).then((value) {
+                      if (value != null) {
+                        // Handle menu selection (e.g. edit, delete)
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(0.01.sh),
+                    child: SvgPicture.asset(IconAssets.menuIcon),
+                  ),
                 ),
             ],
           ),

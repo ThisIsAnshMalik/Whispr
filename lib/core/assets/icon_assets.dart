@@ -26,4 +26,8 @@ class IconAssets {
   static const String deleteIcon = 'assets/icons/delete_icon.svg';
   static const String backIcon = 'assets/icons/back_icon.svg';
   static const String menuIcon = 'assets/icons/menu_icon.svg';
+  static const String deleteConfessionIcon =
+      'assets/icons/delete_confession_icon.svg';
+  static const String editConfessionIcon =
+      'assets/icons/edit_confession_icon.svg';
 }
