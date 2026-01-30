@@ -30,4 +30,6 @@ class IconAssets {
       'assets/icons/delete_confession_icon.svg';
   static const String editConfessionIcon =
       'assets/icons/edit_confession_icon.svg';
+
+  static const String uploadIcon = 'assets/icons/upload_icon.svg';
 }
