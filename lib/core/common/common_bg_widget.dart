@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 class CommonBgWidget extends StatelessWidget {
@@ -39,7 +40,10 @@ class CommonBgWidget extends StatelessWidget {
             bottom: false,
             left: false,
             right: false,
-            child: child,
+            child: Padding(
+              padding: EdgeInsets.only(top: 0.02.sh),
+              child: child,
+            ),
           ),
         ),
       ),
