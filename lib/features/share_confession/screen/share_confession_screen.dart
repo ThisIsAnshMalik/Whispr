@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:whispr_app/core/common/common_app_bar.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
@@ -27,6 +28,7 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
   bool _agreeRules = false;
   bool _acceptResponsibility = false;
   bool _consentModeration = false;
+  XFile? _selectedVideo;
 
   @override
   void dispose() {
@@ -66,7 +68,11 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 0.02.sh),
-                    UploadConfessionSection(),
+                    UploadConfessionSection(
+                      selectedVideo: _selectedVideo,
+                      onVideoSelected: (file) =>
+                          setState(() => _selectedVideo = file),
+                    ),
                     SizedBox(height: 0.02.sh),
                     Container(
                       padding: EdgeInsets.symmetric(
