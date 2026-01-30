@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whispr_app/core/common/common_app_bar.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
+import 'package:whispr_app/core/common/common_snackbar.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/share_confession/widgets/allow_comments_section.dart';
 import 'package:whispr_app/features/share_confession/widgets/agreement_checkboxes.dart';
@@ -40,19 +41,15 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
 
   void _onShareConfession() {
     if (!_agreeRules || !_acceptResponsibility || !_consentModeration) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please agree to all terms before sharing'),
-          backgroundColor: Colors.red.shade700,
-        ),
+      CommonSnackbar.showError(
+        context,
+        message: 'Please agree to all terms before sharing',
       );
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Confession shared successfully'),
-        backgroundColor: Colors.green,
-      ),
+    CommonSnackbar.showSuccess(
+      context,
+      message: 'Confession shared successfully',
     );
   }
 
