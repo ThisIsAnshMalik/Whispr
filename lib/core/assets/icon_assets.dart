@@ -32,4 +32,7 @@ class IconAssets {
       'assets/icons/edit_confession_icon.svg';
 
   static const String uploadIcon = 'assets/icons/upload_icon.svg';
+  static const String replyIcon = 'assets/icons/reply_icon.svg';
+
+  static const String sendIcon = 'assets/icons/send_icon.svg';
 }

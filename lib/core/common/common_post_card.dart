@@ -9,6 +9,7 @@ import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/assets/image_assets.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
+import 'package:whispr_app/core/common/comments_bottom_sheet.dart';
 import 'package:whispr_app/core/common/report_content_bottom_sheet.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
@@ -220,48 +221,41 @@ class PostCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 0.01.sh),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 0.03.sw),
-            width: 1.sw,
-            height: 0.06.sh,
-            decoration: BoxDecoration(
-              color: AppPallete.whiteColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16.4.r),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100.r),
-                  child: Image.asset(
-                    ImageAssets.userProfileImg,
-                    height: 0.03.sh,
-                    width: 0.06.sw,
-                  ),
-                ),
-                SizedBox(width: 0.02.sw),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Add a comment...',
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.zero, // optional, for tight layout
-                    ),
-                    style: const TextStyle(
-                      // customize text style if needed
+          InkWell(
+            onTap: () => showCommentsBottomSheet(context),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 0.03.sw),
+              width: 1.sw,
+              height: 0.06.sh,
+              decoration: BoxDecoration(
+                color: AppPallete.whiteColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16.4.r),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100.r),
+                    child: Image.asset(
+                      ImageAssets.userProfileImg,
+                      height: 0.03.sh,
+                      width: 0.06.sw,
                     ),
                   ),
-                ),
-                SizedBox(width: 0.02.sw),
-                CommonText(
-                  text: "(273 Comments)",
-                  fontWeight: FontWeight.w500,
-                  fontSize: 0.012.sh,
-                ),
-              ],
+                  SizedBox(width: 0.02.sw),
+                  CommonText(
+                    text: "Add a comment...",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 0.013.sh,
+                    color: AppPallete.whiteColor.withOpacity(0.6),
+                  ),
+                  Spacer(),
+                  CommonText(
+                    text: "(273 Comments)",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 0.012.sh,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
