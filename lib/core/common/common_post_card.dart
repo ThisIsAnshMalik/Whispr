@@ -13,7 +13,8 @@ import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 class PostCard extends StatelessWidget {
   final bool videoCard;
-  const PostCard({super.key, required this.videoCard});
+  final bool isMyPost;
+  const PostCard({super.key, required this.videoCard, this.isMyPost = false});
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +51,26 @@ class PostCard extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(100.r),
-                child: Container(
-                  padding: EdgeInsets.all(0.02.sh),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppPallete.whiteColor.withOpacity(0.1),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
-                    child: SvgPicture.asset(IconAssets.flagIcon),
+              if (!isMyPost)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100.r),
+                  child: Container(
+                    padding: EdgeInsets.all(0.02.sh),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppPallete.whiteColor.withOpacity(0.1),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
+                      child: SvgPicture.asset(IconAssets.flagIcon),
+                    ),
                   ),
                 ),
-              ),
+              if (isMyPost)
+                Container(
+                  padding: EdgeInsets.all(0.01.sh),
+                  child: SvgPicture.asset(IconAssets.menuIcon),
+                ),
             ],
           ),
           SizedBox(height: 0.01.sh),

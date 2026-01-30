@@ -24,4 +24,6 @@ class IconAssets {
   static const String lockIcon = 'assets/icons/lock_icon.svg';
   static const String logoutIcon = 'assets/icons/logout_icon.svg';
   static const String deleteIcon = 'assets/icons/delete_icon.svg';
+  static const String backIcon = 'assets/icons/back_icon.svg';
+  static const String menuIcon = 'assets/icons/menu_icon.svg';
 }

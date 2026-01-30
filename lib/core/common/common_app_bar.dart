@@ -5,22 +5,40 @@ import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 
 class CommonAppBar extends StatelessWidget {
-  const CommonAppBar({super.key});
+  final String title;
+  final bool isBackButton;
+  final bool isNotification;
+  const CommonAppBar({
+    super.key,
+    required this.title,
+    this.isBackButton = false,
+    this.isNotification = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(width: 0.05.sw),
+        SizedBox(
+          width: 0.05.sw,
+          child: isBackButton
+              ? InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.arrow_back_ios_new, size: 0.022.sh),
+                )
+              : SizedBox.shrink(),
+        ),
         CommonText(
-          text: 'John Doe',
+          text: title,
           fontSize: 0.022.sh,
           fontWeight: FontWeight.w700,
         ),
         SizedBox(
           width: 0.05.sw,
-          child: SvgPicture.asset(IconAssets.notificationIcon),
+          child: isNotification
+              ? SvgPicture.asset(IconAssets.notificationIcon)
+              : SizedBox.shrink(),
         ),
       ],
     );

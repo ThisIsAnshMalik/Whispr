@@ -10,6 +10,7 @@ import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/change_password/screen/change_password_screen.dart';
+import 'package:whispr_app/features/my_confession/screen/my_confessions_screen.dart';
 import 'package:whispr_app/features/profile/widgets/profile_nav_button.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -19,11 +20,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonBgWidget(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 0.01.sh),
+        padding: EdgeInsets.symmetric(horizontal: 0.04.sw, vertical: 0.01.sh),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CommonAppBar(),
+            CommonAppBar(title: 'Profile'),
             SizedBox(height: 0.03.sh),
             SizedBox(height: 0.1.sh, child: UserAvatar()),
             SizedBox(height: 0.012.sh),
@@ -58,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChangePasswordScreen(),
+                          builder: (context) => MyConfessionsScreen(),
                         ),
                       );
                     },
