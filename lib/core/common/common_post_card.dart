@@ -9,6 +9,7 @@ import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/assets/image_assets.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
+import 'package:whispr_app/core/common/report_content_bottom_sheet.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 class PostCard extends StatelessWidget {
@@ -52,17 +53,20 @@ class PostCard extends StatelessWidget {
               ),
               Spacer(),
               if (!isMyPost)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100.r),
-                  child: Container(
-                    padding: EdgeInsets.all(0.02.sh),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppPallete.whiteColor.withOpacity(0.1),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
-                      child: SvgPicture.asset(IconAssets.flagIcon),
+                GestureDetector(
+                  onTap: () => showReportContentBottomSheet(context),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100.r),
+                    child: Container(
+                      padding: EdgeInsets.all(0.02.sh),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppPallete.whiteColor.withOpacity(0.1),
+                      ),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
+                        child: SvgPicture.asset(IconAssets.flagIcon),
+                      ),
                     ),
                   ),
                 ),

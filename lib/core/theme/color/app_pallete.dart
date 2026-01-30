@@ -12,4 +12,7 @@ class AppPallete {
   static const Color primaryColor = Color(0xFF2C1D88);
 
   static const Color secondaryColor = Color(0xFF741278);
+
+  // ignore: deprecated_member_use
+  static Color bottomSheetColor = Color(0xFF323232).withOpacity(0.8);
 }
