@@ -10,7 +10,8 @@ import 'package:whispr_app/features/share_confession/widgets/allow_comments_sect
 import 'package:whispr_app/features/share_confession/widgets/agreement_checkboxes.dart';
 import 'package:whispr_app/features/share_confession/widgets/caption_section.dart';
 import 'package:whispr_app/features/share_confession/widgets/share_confession_button.dart';
-import 'package:whispr_app/features/share_confession/widgets/upload_confession_section.dart';
+import 'package:whispr_app/features/share_confession/widgets/upload_confession_section.dart'
+    show ConfessionMediaType, UploadConfessionSection;
 import 'package:whispr_app/features/share_confession/widgets/visibility_section.dart'
     show VisibilityOption, VisibilitySection;
 
@@ -28,7 +29,8 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
   bool _agreeRules = false;
   bool _acceptResponsibility = false;
   bool _consentModeration = false;
-  XFile? _selectedVideo;
+  XFile? _selectedFile;
+  ConfessionMediaType? _mediaType;
 
   @override
   void dispose() {
@@ -69,9 +71,12 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
                   children: [
                     SizedBox(height: 0.02.sh),
                     UploadConfessionSection(
-                      selectedVideo: _selectedVideo,
-                      onVideoSelected: (file) =>
-                          setState(() => _selectedVideo = file),
+                      selectedFile: _selectedFile,
+                      mediaType: _mediaType,
+                      onMediaSelected: (value) => setState(() {
+                        _selectedFile = value.$1;
+                        _mediaType = value.$2;
+                      }),
                     ),
                     SizedBox(height: 0.02.sh),
                     Container(
