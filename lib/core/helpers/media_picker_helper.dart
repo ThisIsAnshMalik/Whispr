@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
+import 'package:whispr_app/core/common/common_snackbar.dart';
+import 'package:whispr_app/core/helpers/media_duration_helper.dart';
 
 /// Helper for picking media (video, audio, image) from device or camera.
-/// Handles errors by showing a SnackBar when [BuildContext] is still mounted.
+/// Video and audio are limited to 5 minutes max.
 class MediaPickerHelper {
   MediaPickerHelper._();
 
   static final ImagePicker _imagePicker = ImagePicker();
 
-  /// Records voice using the device microphone.
+  /// Records voice using the device microphone (max 5 minutes).
   /// Shows a dialog with Stop/Cancel; returns [XFile] on Stop, null on Cancel or error.
   static Future<XFile?> recordAudio(BuildContext context) async {
     final recorder = AudioRecorder();
@@ -21,11 +23,9 @@ class MediaPickerHelper {
       final hasPermission = await recorder.hasPermission();
       if (!hasPermission) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Microphone permission is required to record.'),
-              backgroundColor: Colors.red,
-            ),
+          CommonSnackbar.showError(
+            context,
+            message: 'Microphone permission is required to record.',
           );
         }
         return null;
@@ -43,11 +43,9 @@ class MediaPickerHelper {
       return file;
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not record audio: $e'),
-            backgroundColor: Colors.red.shade700,
-          ),
+        CommonSnackbar.showError(
+          context,
+          message: 'Could not record audio: $e',
         );
       }
       return null;
@@ -56,30 +54,34 @@ class MediaPickerHelper {
     }
   }
 
-  /// Picks a video from [source] (gallery or camera).
-  /// Returns [XFile] on success, null if cancelled or on error.
+  /// Picks a video from [source] (gallery or camera). Max duration 5 minutes.
+  /// Returns [XFile] on success, null if cancelled, on error, or if video exceeds 5 min.
   static Future<XFile?> pickVideo(
     BuildContext context, {
     required ImageSource source,
   }) async {
     try {
       final file = await _imagePicker.pickVideo(source: source);
+      if (file == null || !context.mounted) return file;
+      final duration = await MediaDurationHelper.getVideoDuration(file.path);
+      if (!MediaDurationHelper.isWithinLimit(duration)) {
+        CommonSnackbar.showError(
+          context,
+          message: 'Video must be 5 minutes or less.',
+        );
+        return null;
+      }
       return file;
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not pick video: $e'),
-            backgroundColor: Colors.red.shade700,
-          ),
-        );
+        CommonSnackbar.showError(context, message: 'Could not pick video: $e');
       }
       return null;
     }
   }
 
-  /// Picks an audio file from the device.
-  /// Returns [XFile] on success, null if cancelled or on error.
+  /// Picks an audio file from the device. Max duration 5 minutes.
+  /// Returns [XFile] on success, null if cancelled, on error, or if audio exceeds 5 min.
   static Future<XFile?> pickAudio(BuildContext context) async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -87,18 +89,20 @@ class MediaPickerHelper {
         allowMultiple: false,
       );
       final path = result?.files.singleOrNull?.path;
-      if (path != null) {
-        return XFile(path);
+      if (path == null) return null;
+      if (!context.mounted) return XFile(path);
+      final duration = await MediaDurationHelper.getAudioDuration(path);
+      if (!MediaDurationHelper.isWithinLimit(duration)) {
+        CommonSnackbar.showError(
+          context,
+          message: 'Audio must be 5 minutes or less.',
+        );
+        return null;
       }
-      return null;
+      return XFile(path);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not pick audio: $e'),
-            backgroundColor: Colors.red.shade700,
-          ),
-        );
+        CommonSnackbar.showError(context, message: 'Could not pick audio: $e');
       }
       return null;
     }
@@ -140,6 +144,9 @@ class _RecordAudioDialog extends StatefulWidget {
 class _RecordAudioDialogState extends State<_RecordAudioDialog> {
   bool _isRecording = false;
   bool _isStopping = false;
+  int _elapsedSeconds = 0;
+  bool _elapsedTimerStarted = false;
+  static const int _maxSeconds = 5 * 60; // 5 minutes
 
   @override
   void initState() {
@@ -150,11 +157,15 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
   Future<void> _startRecording() async {
     try {
       await widget.recorder.start(const RecordConfig(), path: widget.path);
-      if (mounted) setState(() => _isRecording = true);
+      if (mounted) {
+        setState(() => _isRecording = true);
+        _startElapsedTimer();
+      }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to start recording: $e')),
+        CommonSnackbar.showError(
+          context,
+          message: 'Failed to start recording: $e',
         );
         Navigator.of(context).pop();
       }
@@ -171,9 +182,10 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
+        CommonSnackbar.showError(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to save recording: $e')));
+          message: 'Failed to save recording: $e',
+        );
         Navigator.of(context).pop();
       }
     }
@@ -190,6 +202,12 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
     }
   }
 
+  String _formatTime(int seconds) {
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -204,9 +222,18 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
           ),
           const SizedBox(height: 16),
           Text(
-            _isRecording ? 'Recording... Tap Stop when done.' : 'Starting...',
+            _isRecording
+                ? 'Recording... Tap Stop when done. (Max 5 min)'
+                : 'Starting...',
             textAlign: TextAlign.center,
           ),
+          if (_isRecording) ...[
+            const SizedBox(height: 12),
+            Text(
+              '${_formatTime(_elapsedSeconds)} / ${_formatTime(_maxSeconds)}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ],
         ],
       ),
       actions: [
@@ -220,5 +247,22 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
         ),
       ],
     );
+  }
+
+  void _startElapsedTimer() {
+    if (_elapsedTimerStarted) return;
+    _elapsedTimerStarted = true;
+    void tick() {
+      if (!mounted || _isStopping) return;
+      final next = _elapsedSeconds + 1;
+      setState(() => _elapsedSeconds = next);
+      if (next >= _maxSeconds) {
+        _stopRecording();
+      } else {
+        Future.delayed(const Duration(seconds: 1), tick);
+      }
+    }
+
+    Future.delayed(const Duration(seconds: 1), tick);
   }
 }
