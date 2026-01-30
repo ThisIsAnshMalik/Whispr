@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 /// Common snackbar utility for success and error feedback.
-/// Displays as a floating snackbar from the top of the screen.
+/// Displays as a floating snackbar from the top, styled to match the app.
 class CommonSnackbar {
   CommonSnackbar._();
 
   static const double _horizontalMargin = 16;
   static const double _topMargin = 12;
-  static const double _radius = 12;
+  static const double _radius = 14;
+
+  /// Success green that complements the app's purple theme.
+  static const Color _successColor = Color(0xFF2E7D32);
+
+  /// Error red that fits the dark gradient background.
+  static const Color _errorColor = Color(0xFFC62828);
 
   static void _showFromTop(
     BuildContext context, {
     required String message,
     required Color backgroundColor,
+    required IconData icon,
     Duration duration = const Duration(seconds: 3),
   }) {
     if (!context.mounted) return;
@@ -22,6 +32,7 @@ class CommonSnackbar {
       builder: (_) => _FloatingSnackbar(
         message: message,
         backgroundColor: backgroundColor,
+        icon: icon,
         duration: duration,
         onDismiss: () => overlayEntry.remove(),
       ),
@@ -29,7 +40,7 @@ class CommonSnackbar {
     overlay.insert(overlayEntry);
   }
 
-  /// Shows a success message from the top with green styling.
+  /// Shows a success message from the top with app-styled green.
   static void showSuccess(
     BuildContext context, {
     required String message,
@@ -38,12 +49,13 @@ class CommonSnackbar {
     _showFromTop(
       context,
       message: message,
-      backgroundColor: Colors.green.shade700,
+      backgroundColor: _successColor,
+      icon: Icons.check_circle_rounded,
       duration: duration,
     );
   }
 
-  /// Shows an error/failure message from the top with red styling.
+  /// Shows an error/failure message from the top with app-styled red.
   static void showError(
     BuildContext context, {
     required String message,
@@ -52,7 +64,8 @@ class CommonSnackbar {
     _showFromTop(
       context,
       message: message,
-      backgroundColor: Colors.red.shade700,
+      backgroundColor: _errorColor,
+      icon: Icons.error_rounded,
       duration: duration,
     );
   }
@@ -62,12 +75,14 @@ class _FloatingSnackbar extends StatefulWidget {
   const _FloatingSnackbar({
     required this.message,
     required this.backgroundColor,
+    required this.icon,
     required this.duration,
     required this.onDismiss,
   });
 
   final String message;
   final Color backgroundColor;
+  final IconData icon;
   final Duration duration;
   final VoidCallback onDismiss;
 
@@ -125,24 +140,43 @@ class _FloatingSnackbarState extends State<_FloatingSnackbar>
             child: Material(
               color: Colors.transparent,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                 decoration: BoxDecoration(
                   color: widget.backgroundColor,
-                  borderRadius: BorderRadius.circular(CommonSnackbar._radius),
+                  borderRadius: BorderRadius.circular(CommonSnackbar._radius.r),
+                  border: Border.all(
+                    color: AppPallete.whiteColor.withOpacity(0.15),
+                    width: 1,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black26,
+                      color: AppPallete.primaryColor.withOpacity(0.25),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Text(
-                  widget.message,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                child: Row(
+                  children: [
+                    Icon(widget.icon, color: AppPallete.whiteColor, size: 24.r),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        widget.message,
+                        style: GoogleFonts.montserrat(
+                          color: AppPallete.whiteColor,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
