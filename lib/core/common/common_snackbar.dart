@@ -26,7 +26,8 @@ class CommonSnackbar {
     Duration duration = const Duration(seconds: 3),
   }) {
     if (!context.mounted) return;
-    final overlay = Overlay.of(context);
+    final overlay = Overlay.maybeOf(context);
+    if (overlay == null) return;
     late OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(
       builder: (_) => _FloatingSnackbar(

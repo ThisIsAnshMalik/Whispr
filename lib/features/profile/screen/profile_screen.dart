@@ -3,18 +3,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/common/common_app_bar.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
+import 'package:whispr_app/core/common/common_snackbar.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
+import 'package:whispr_app/features/auth/login/screen/login_screen.dart';
 import 'package:whispr_app/features/change_password/screen/change_password_screen.dart';
 import 'package:whispr_app/features/my_confession/screen/my_confessions_screen.dart';
 import 'package:whispr_app/features/profile/widgets/profile_nav_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  void _handleLogout(BuildContext context) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppPallete.blackColor,
+        title: CommonText(
+          text: 'Logout',
+          color: AppPallete.whiteColor,
+          fontWeight: FontWeight.w600,
+        ),
+        content: CommonText(
+          text: 'Are you sure you want to logout?',
+          color: AppPallete.whiteColor,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: CommonText(text: 'Cancel', color: AppPallete.whiteColor),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              Get.offAll(() => const LoginScreen());
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final ctx = Get.overlayContext;
+                if (ctx != null && ctx.mounted) {
+                  CommonSnackbar.showSuccess(
+                    ctx,
+                    message: 'You have been logged out',
+                  );
+                }
+              });
+            },
+            child: CommonText(
+              text: 'Logout',
+              color: AppPallete.whiteColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,44 +146,58 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 0.04.sw,
-                            vertical: 0.02.sh,
+                        InkWell(
+                          onTap: () => _handleLogout(context),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(15.r),
                           ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(IconAssets.logoutIcon),
-                              SizedBox(width: 0.02.sw),
-                              CommonText(
-                                text: "Logout Account",
-                                fontSize: 0.016.sh,
-                                fontWeight: FontWeight.w600,
-                                color: AppPallete.blackTextColor,
-                              ),
-                            ],
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.04.sw,
+                              vertical: 0.02.sh,
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(IconAssets.logoutIcon),
+                                SizedBox(width: 0.02.sw),
+                                CommonText(
+                                  text: "Logout Account",
+                                  fontSize: 0.016.sh,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppPallete.blackTextColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Divider(
                           color: AppPallete.blackTextColor.withOpacity(0.2),
                           height: 1,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 0.04.sw,
-                            vertical: 0.02.sh,
+                        InkWell(
+                          onTap: () {
+                            // TODO: Delete account flow
+                          },
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(15.r),
                           ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(IconAssets.deleteIcon),
-                              SizedBox(width: 0.02.sw),
-                              CommonText(
-                                text: "Delete Account",
-                                fontSize: 0.016.sh,
-                                fontWeight: FontWeight.w600,
-                                color: AppPallete.blackTextColor,
-                              ),
-                            ],
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.04.sw,
+                              vertical: 0.02.sh,
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(IconAssets.deleteIcon),
+                                SizedBox(width: 0.02.sw),
+                                CommonText(
+                                  text: "Delete Account",
+                                  fontSize: 0.016.sh,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppPallete.blackTextColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

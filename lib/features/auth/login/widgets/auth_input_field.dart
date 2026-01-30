@@ -11,6 +11,7 @@ class AuthInputField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
+  final String? errorText;
 
   const AuthInputField({
     super.key,
@@ -19,10 +20,12 @@ class AuthInputField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.suffixIcon,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final hasError = errorText != null && errorText!.isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,6 +36,15 @@ class AuthInputField extends StatelessWidget {
           color: AppPallete.whiteColor,
         ),
         SizedBox(height: 0.01.sh),
+        if (hasError) ...[
+          CommonText(
+            text: errorText!,
+            fontSize: 0.012.sh,
+            color: const Color(0xFFEF5350),
+            maxLine: 2,
+          ),
+          SizedBox(height: 0.006.sh),
+        ],
         ClipRRect(
           borderRadius: BorderRadius.circular(20.r),
           child: BackdropFilter(
