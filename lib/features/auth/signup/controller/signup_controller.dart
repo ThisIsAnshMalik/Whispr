@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whispr_app/core/common/common_snackbar.dart';
+import 'package:whispr_app/core/controllers/session_controller.dart';
 import 'package:whispr_app/core/helpers/validation_helper.dart';
 import 'package:whispr_app/features/auth/login/screen/login_screen.dart';
 import 'package:whispr_app/features/dashboard/dashboard_screen.dart';
@@ -15,6 +16,7 @@ class SignupController extends GetxController {
   final emailError = Rx<String?>(null);
   final passwordError = Rx<String?>(null);
   final confirmPasswordError = Rx<String?>(null);
+  final isLoading = false.obs;
 
   @override
   void onInit() {
@@ -66,7 +68,7 @@ class SignupController extends GetxController {
     obscureConfirmPassword.toggle();
   }
 
-  void handleSignup(BuildContext context) {
+  Future<void> handleSignup(BuildContext context) async {
     final emailErr = ValidationHelper.validateEmail(emailController.text);
     final passwordErr = ValidationHelper.validatePasswordSignup(
       passwordController.text,
@@ -89,11 +91,17 @@ class SignupController extends GetxController {
       return;
     }
 
-    CommonSnackbar.showSuccess(
+    isLoading.value = true;
+    final success = await SessionController.to.signup(
       context,
-      message: 'Account created successfully',
+      email: emailController.text.trim(),
+      password: passwordController.text,
     );
-    Get.offAll(() => const DashboardScreen());
+    isLoading.value = false;
+
+    if (success) {
+      Get.offAll(() => const DashboardScreen());
+    }
   }
 
   void goToLogin() {
@@ -101,7 +109,10 @@ class SignupController extends GetxController {
   }
 
   void handleSocialSignup(BuildContext context, String provider) {
-    CommonSnackbar.showSuccess(context, message: 'Signed up with $provider');
-    Get.offAll(() => const DashboardScreen());
+    // Social signup not implemented for local-only mode
+    CommonSnackbar.showError(
+      context,
+      message: 'Social signup is not available in offline mode',
+    );
   }
 }

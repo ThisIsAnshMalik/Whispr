@@ -45,6 +45,9 @@ dependencies:
   get: ^4.7.3
   video_player: ^2.9.2
   just_audio: ^0.9.40
+  sqflite: ^2.4.1
+  shared_preferences: ^2.2.2
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:

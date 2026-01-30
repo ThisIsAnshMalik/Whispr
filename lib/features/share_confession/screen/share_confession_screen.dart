@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:whispr_app/core/common/common_app_bar.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_snackbar.dart';
+import 'package:whispr_app/core/controllers/posts_controller.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/share_confession/widgets/allow_comments_section.dart';
 import 'package:whispr_app/features/share_confession/widgets/agreement_checkboxes.dart';
@@ -32,6 +33,7 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
   bool _consentModeration = false;
   XFile? _selectedFile;
   ConfessionMediaType? _mediaType;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -39,7 +41,8 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
     super.dispose();
   }
 
-  void _onShareConfession() {
+  Future<void> _onShareConfession() async {
+    // Validate terms agreement
     if (!_agreeRules || !_acceptResponsibility || !_consentModeration) {
       CommonSnackbar.showError(
         context,
@@ -47,10 +50,48 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
       );
       return;
     }
-    CommonSnackbar.showSuccess(
-      context,
-      message: 'Confession shared successfully',
-    );
+
+    // Validate caption
+    if (_captionController.text.trim().isEmpty) {
+      CommonSnackbar.showError(
+        context,
+        message: 'Please add a caption for your confession',
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final success = await PostsController.to.createPost(
+        context: context,
+        caption: _captionController.text.trim(),
+        mediaPath: _selectedFile?.path,
+        mediaType: _mediaType?.name,
+        visibility: _visibility.name,
+        allowComments: _allowComments,
+      );
+
+      if (success && mounted) {
+        // Reset form
+        setState(() {
+          _captionController.clear();
+          _selectedFile = null;
+          _mediaType = null;
+          _visibility = VisibilityOption.blurFace;
+          _allowComments = true;
+          _agreeRules = false;
+          _acceptResponsibility = false;
+          _consentModeration = false;
+        });
+        // Navigate to home tab
+        // The DashboardScreen handles the bottom navigation
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 
   @override
@@ -118,7 +159,15 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
                                 setState(() => _consentModeration = v ?? false),
                           ),
                           SizedBox(height: 0.025.sh),
-                          ShareConfessionButton(onTap: _onShareConfession),
+                          _isSubmitting
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppPallete.whiteColor,
+                                  ),
+                                )
+                              : ShareConfessionButton(
+                                  onTap: _onShareConfession,
+                                ),
                         ],
                       ),
                     ),

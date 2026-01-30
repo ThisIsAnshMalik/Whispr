@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whispr_app/core/common/common_snackbar.dart';
+import 'package:whispr_app/core/controllers/session_controller.dart';
 import 'package:whispr_app/core/helpers/validation_helper.dart';
-import 'package:whispr_app/features/dashboard/dashboard_screen.dart';
 import 'package:whispr_app/features/auth/signup/screen/signup_screen.dart';
+import 'package:whispr_app/features/dashboard/dashboard_screen.dart';
+import 'package:whispr_app/features/forgot_password/screen/forgot_password_screen.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -12,6 +14,7 @@ class LoginController extends GetxController {
   final obscurePassword = true.obs;
   final emailError = Rx<String?>(null);
   final passwordError = Rx<String?>(null);
+  final isLoading = false.obs;
 
   @override
   void onInit() {
@@ -45,7 +48,7 @@ class LoginController extends GetxController {
     obscurePassword.toggle();
   }
 
-  void handleLogin(BuildContext context) {
+  Future<void> handleLogin(BuildContext context) async {
     final emailErr = ValidationHelper.validateEmail(emailController.text);
     final passwordErr = ValidationHelper.validatePasswordLogin(
       passwordController.text,
@@ -62,16 +65,32 @@ class LoginController extends GetxController {
       return;
     }
 
-    CommonSnackbar.showSuccess(context, message: 'Login successful');
-    Get.offAll(() => const DashboardScreen());
+    isLoading.value = true;
+    final success = await SessionController.to.login(
+      context,
+      email: emailController.text.trim(),
+      password: passwordController.text,
+    );
+    isLoading.value = false;
+
+    if (success) {
+      Get.offAll(() => const DashboardScreen());
+    }
   }
 
   void goToSignup() {
     Get.off(() => const SignupScreen());
   }
 
+  void goToForgotPassword() {
+    Get.to(() => const ForgotPasswordScreen());
+  }
+
   void handleSocialLogin(BuildContext context, String provider) {
-    CommonSnackbar.showSuccess(context, message: 'Signed in with $provider');
-    Get.offAll(() => const DashboardScreen());
+    // Social login not implemented for local-only mode
+    CommonSnackbar.showError(
+      context,
+      message: 'Social login is not available in offline mode',
+    );
   }
 }

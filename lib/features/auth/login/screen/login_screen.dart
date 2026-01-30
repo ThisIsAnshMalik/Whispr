@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 0.01.sh),
-                ForgotPasswordLink(onTap: () {}),
+                ForgotPasswordLink(onTap: controller.goToForgotPassword),
                 SizedBox(height: 0.02.sh),
                 AuthActionButton(
                   text: 'Login',

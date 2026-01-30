@@ -10,6 +10,7 @@ import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_snackbar.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/common/common_user_avatar.dart';
+import 'package:whispr_app/core/controllers/session_controller.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 import 'package:whispr_app/features/auth/login/screen/login_screen.dart';
 import 'package:whispr_app/features/change_password/screen/change_password_screen.dart';
@@ -38,8 +39,9 @@ class ProfileScreen extends StatelessWidget {
             child: CommonText(text: 'Cancel', color: AppPallete.whiteColor),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Get.back();
+              await SessionController.to.logout();
               Get.offAll(() => const LoginScreen());
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 final ctx = Get.overlayContext;
@@ -62,6 +64,54 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  void _handleDeleteAccount(BuildContext context) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppPallete.blackColor,
+        title: CommonText(
+          text: 'Delete Account',
+          color: Colors.red,
+          fontWeight: FontWeight.w600,
+        ),
+        content: CommonText(
+          text:
+              'Are you sure you want to delete your account? This action cannot be undone and all your data will be lost.',
+          color: AppPallete.whiteColor,
+          maxLine: 5,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: CommonText(text: 'Cancel', color: AppPallete.whiteColor),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              final success = await SessionController.to.deleteAccount(context);
+              if (success) {
+                Get.offAll(() => const LoginScreen());
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final ctx = Get.overlayContext;
+                  if (ctx != null && ctx.mounted) {
+                    CommonSnackbar.showSuccess(
+                      ctx,
+                      message: 'Account deleted successfully',
+                    );
+                  }
+                });
+              }
+            },
+            child: CommonText(
+              text: 'Delete',
+              color: Colors.red,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CommonBgWidget(
@@ -74,10 +124,21 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(height: 0.03.sh),
             SizedBox(height: 0.1.sh, child: UserAvatar()),
             SizedBox(height: 0.012.sh),
-            CommonText(
-              text: 'Anonymous',
-              fontSize: 0.018.sh,
-              fontWeight: FontWeight.w700,
+            Obx(
+              () => CommonText(
+                text: SessionController.to.displayName,
+                fontSize: 0.018.sh,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 0.005.sh),
+            Obx(
+              () => CommonText(
+                text: SessionController.to.userEmail,
+                fontSize: 0.012.sh,
+                fontWeight: FontWeight.w400,
+                color: AppPallete.whiteColor.withOpacity(0.7),
+              ),
             ),
             SizedBox(height: 0.005.sh),
             CommonText(
@@ -175,9 +236,7 @@ class ProfileScreen extends StatelessWidget {
                           height: 1,
                         ),
                         InkWell(
-                          onTap: () {
-                            // TODO: Delete account flow
-                          },
+                          onTap: () => _handleDeleteAccount(context),
                           borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(15.r),
                           ),
