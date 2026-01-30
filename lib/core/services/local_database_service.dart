@@ -92,6 +92,24 @@ class LocalDatabaseService {
       await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at)',
       );
+
+      // Also ensure comments table exists (may have been missed in v1)
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS comments (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          post_id TEXT NOT NULL,
+          parent_id INTEGER,
+          text TEXT NOT NULL,
+          created_at INTEGER NOT NULL,
+          FOREIGN KEY (parent_id) REFERENCES comments (id) ON DELETE CASCADE
+        )
+      ''');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(post_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_comments_parent ON comments(parent_id)',
+      );
     }
 
     if (oldVersion < 3) {
@@ -155,7 +173,10 @@ class LocalDatabaseService {
     if (post == null) return null;
 
     final newIsLiked = !post.isLiked;
-    final newLikes = newIsLiked ? post.likes + 1 : post.likes - 1;
+    // Prevent negative likes
+    final newLikes = newIsLiked
+        ? post.likes + 1
+        : (post.likes - 1).clamp(0, 999999999);
 
     await db.update(
       'posts',
@@ -242,10 +263,13 @@ class LocalDatabaseService {
   // ---------------------------------------------------------------------------
 
   /// Inserts a new user and returns it with its assigned id.
+  /// Email is normalized to lowercase for consistent lookups.
   Future<UserModel> insertUser(UserModel user) async {
     final db = await database;
-    final id = await db.insert('users', user.toMap());
-    return user.copyWith(id: id);
+    // Normalize email to lowercase
+    final normalizedUser = user.copyWith(email: user.email.toLowerCase());
+    final id = await db.insert('users', normalizedUser.toMap());
+    return normalizedUser.copyWith(id: id);
   }
 
   /// Fetches a user by id.

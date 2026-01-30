@@ -78,10 +78,10 @@ class PostsController extends GetxController {
         final index = posts.indexWhere((p) => p.id == postId);
         if (index != -1) {
           posts[index] = updated;
-          posts.refresh();
         }
       }
     } catch (e) {
+      debugPrint('Error toggling like: $e');
       if (context.mounted) {
         CommonSnackbar.showError(context, message: 'Failed to update like');
       }
@@ -99,13 +99,13 @@ class PostsController extends GetxController {
       final index = posts.indexWhere((p) => p.id == postId);
       if (index != -1) {
         posts[index] = posts[index].copyWith(caption: newCaption);
-        posts.refresh();
       }
       if (context.mounted) {
         CommonSnackbar.showSuccess(context, message: 'Confession updated');
       }
       return true;
     } catch (e) {
+      debugPrint('Error updating caption: $e');
       if (context.mounted) {
         CommonSnackbar.showError(
           context,
@@ -138,6 +138,11 @@ class PostsController extends GetxController {
 
   /// Gets comment count for a post.
   Future<int> getCommentCount(int postId) async {
-    return await _db.countCommentsForPost('post_$postId');
+    try {
+      return await _db.countCommentsForPost('post_$postId');
+    } catch (e) {
+      debugPrint('Error getting comment count: $e');
+      return 0;
+    }
   }
 }

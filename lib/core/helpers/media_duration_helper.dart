@@ -41,8 +41,9 @@ class MediaDurationHelper {
   }
 
   /// Returns true if [duration] is within the max allowed (5 min).
+  /// Returns false for null duration (cannot verify, safer to reject).
   static bool isWithinLimit(Duration? duration) {
-    if (duration == null) return true;
+    if (duration == null) return false;
     return duration <= kMaxMediaDuration;
   }
 }

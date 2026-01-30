@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -64,6 +66,13 @@ class MediaPickerHelper {
       final file = await _imagePicker.pickVideo(source: source);
       if (file == null || !context.mounted) return file;
       final duration = await MediaDurationHelper.getVideoDuration(file.path);
+      if (duration == null) {
+        CommonSnackbar.showError(
+          context,
+          message: 'Could not verify video duration. Please try another file.',
+        );
+        return null;
+      }
       if (!MediaDurationHelper.isWithinLimit(duration)) {
         CommonSnackbar.showError(
           context,
@@ -92,6 +101,13 @@ class MediaPickerHelper {
       if (path == null) return null;
       if (!context.mounted) return XFile(path);
       final duration = await MediaDurationHelper.getAudioDuration(path);
+      if (duration == null) {
+        CommonSnackbar.showError(
+          context,
+          message: 'Could not verify audio duration. Please try another file.',
+        );
+        return null;
+      }
       if (!MediaDurationHelper.isWithinLimit(duration)) {
         CommonSnackbar.showError(
           context,
@@ -145,13 +161,19 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
   bool _isRecording = false;
   bool _isStopping = false;
   int _elapsedSeconds = 0;
-  bool _elapsedTimerStarted = false;
+  Timer? _elapsedTimer;
   static const int _maxSeconds = 5 * 60; // 5 minutes
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _startRecording());
+  }
+
+  @override
+  void dispose() {
+    _elapsedTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _startRecording() async {
@@ -174,6 +196,7 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
 
   Future<void> _stopRecording() async {
     if (_isStopping) return;
+    _elapsedTimer?.cancel();
     setState(() => _isStopping = true);
     try {
       await widget.recorder.stop();
@@ -193,11 +216,13 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
 
   Future<void> _cancelRecording() async {
     if (_isStopping) return;
+    _elapsedTimer?.cancel();
     setState(() => _isStopping = true);
     try {
       await widget.recorder.cancel();
       if (mounted) Navigator.of(context).pop();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('Error cancelling recording: $e');
       if (mounted) Navigator.of(context).pop();
     }
   }
@@ -206,6 +231,22 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
     final m = seconds ~/ 60;
     final s = seconds % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  void _startElapsedTimer() {
+    _elapsedTimer?.cancel();
+    _elapsedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted || _isStopping) {
+        timer.cancel();
+        return;
+      }
+      final next = _elapsedSeconds + 1;
+      setState(() => _elapsedSeconds = next);
+      if (next >= _maxSeconds) {
+        timer.cancel();
+        _stopRecording();
+      }
+    });
   }
 
   @override
@@ -247,22 +288,5 @@ class _RecordAudioDialogState extends State<_RecordAudioDialog> {
         ),
       ],
     );
-  }
-
-  void _startElapsedTimer() {
-    if (_elapsedTimerStarted) return;
-    _elapsedTimerStarted = true;
-    void tick() {
-      if (!mounted || _isStopping) return;
-      final next = _elapsedSeconds + 1;
-      setState(() => _elapsedSeconds = next);
-      if (next >= _maxSeconds) {
-        _stopRecording();
-      } else {
-        Future.delayed(const Duration(seconds: 1), tick);
-      }
-    }
-
-    Future.delayed(const Duration(seconds: 1), tick);
   }
 }

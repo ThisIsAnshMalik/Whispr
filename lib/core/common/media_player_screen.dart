@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart' as just_audio;
 import 'package:video_player/video_player.dart';
@@ -34,6 +34,9 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
 
   // Audio player
   just_audio.AudioPlayer? _audioPlayer;
+
+  // Stream subscriptions for cleanup
+  final List<StreamSubscription> _subscriptions = [];
 
   bool _isInitialized = false;
   bool _isPlaying = false;
@@ -66,15 +69,7 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
     _videoController = VideoPlayerController.file(File(widget.mediaPath));
     await _videoController!.initialize();
 
-    _videoController!.addListener(() {
-      if (mounted) {
-        setState(() {
-          _position = _videoController!.value.position;
-          _duration = _videoController!.value.duration;
-          _isPlaying = _videoController!.value.isPlaying;
-        });
-      }
-    });
+    _videoController!.addListener(_videoListener);
 
     if (mounted) {
       setState(() {
@@ -86,29 +81,46 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
     }
   }
 
+  void _videoListener() {
+    if (mounted && _videoController != null) {
+      setState(() {
+        _position = _videoController!.value.position;
+        _duration = _videoController!.value.duration;
+        _isPlaying = _videoController!.value.isPlaying;
+      });
+    }
+  }
+
   Future<void> _initializeAudioPlayer() async {
     _audioPlayer = just_audio.AudioPlayer();
     await _audioPlayer!.setFilePath(widget.mediaPath);
 
-    _audioPlayer!.positionStream.listen((position) {
-      if (mounted) {
-        setState(() => _position = position);
-      }
-    });
+    // Store subscriptions for cleanup
+    _subscriptions.add(
+      _audioPlayer!.positionStream.listen((position) {
+        if (mounted) {
+          setState(() => _position = position);
+        }
+      }),
+    );
 
-    _audioPlayer!.durationStream.listen((duration) {
-      if (mounted && duration != null) {
-        setState(() => _duration = duration);
-      }
-    });
+    _subscriptions.add(
+      _audioPlayer!.durationStream.listen((duration) {
+        if (mounted && duration != null) {
+          setState(() => _duration = duration);
+        }
+      }),
+    );
 
-    _audioPlayer!.playerStateStream.listen((state) {
-      if (mounted) {
-        setState(() {
-          _isPlaying = state.playing;
-        });
-      }
-    });
+    _subscriptions.add(
+      _audioPlayer!.playerStateStream.listen((state) {
+        if (mounted) {
+          setState(() {
+            _isPlaying = state.playing;
+          });
+        }
+      }),
+    );
 
     if (mounted) {
       setState(() => _isInitialized = true);
@@ -118,13 +130,15 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
   }
 
   void _togglePlayPause() {
-    if (widget.isVideo) {
+    if (!_isInitialized) return;
+
+    if (widget.isVideo && _videoController != null) {
       if (_videoController!.value.isPlaying) {
         _videoController!.pause();
       } else {
         _videoController!.play();
       }
-    } else {
+    } else if (_audioPlayer != null) {
       if (_audioPlayer!.playing) {
         _audioPlayer!.pause();
       } else {
@@ -134,9 +148,11 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
   }
 
   void _seekTo(Duration position) {
-    if (widget.isVideo) {
+    if (!_isInitialized) return;
+
+    if (widget.isVideo && _videoController != null) {
       _videoController!.seekTo(position);
-    } else {
+    } else if (_audioPlayer != null) {
       _audioPlayer!.seek(position);
     }
   }
@@ -149,6 +165,14 @@ class _MediaPlayerScreenState extends State<MediaPlayerScreen> {
 
   @override
   void dispose() {
+    // Cancel all stream subscriptions
+    for (final sub in _subscriptions) {
+      sub.cancel();
+    }
+    _subscriptions.clear();
+
+    // Remove video listener before disposing
+    _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     _audioPlayer?.dispose();
     super.dispose();
