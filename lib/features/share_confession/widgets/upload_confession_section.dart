@@ -93,6 +93,14 @@ class UploadConfessionSection extends StatelessWidget {
     }
   }
 
+  Future<void> _pickRecordedVoice(BuildContext context) async {
+    Navigator.of(context).pop();
+    final file = await MediaPickerHelper.recordAudio(context);
+    if (file != null) {
+      onMediaSelected?.call((file, ConfessionMediaType.audio));
+    }
+  }
+
   void _showUploadOptions(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
@@ -100,6 +108,7 @@ class UploadConfessionSection extends StatelessWidget {
       builder: (ctx) => _UploadOptionsBottomSheet(
         onPickVideo: (source) => _pickVideo(context, source),
         onPickAudio: () => _pickAudio(context),
+        onRecordVoice: () => _pickRecordedVoice(context),
       ),
     );
   }
@@ -219,10 +228,12 @@ class _UploadButtonSection extends StatelessWidget {
 class _UploadOptionsBottomSheet extends StatelessWidget {
   final void Function(ImageSource source) onPickVideo;
   final VoidCallback onPickAudio;
+  final VoidCallback onRecordVoice;
 
   const _UploadOptionsBottomSheet({
     required this.onPickVideo,
     required this.onPickAudio,
+    required this.onRecordVoice,
   });
 
   @override
@@ -264,6 +275,11 @@ class _UploadOptionsBottomSheet extends StatelessWidget {
               icon: Icons.audiotrack_outlined,
               label: 'Choose audio from device',
               onTap: onPickAudio,
+            ),
+            _OptionTile(
+              icon: Icons.mic_outlined,
+              label: 'Record voice',
+              onTap: onRecordVoice,
             ),
             SizedBox(height: 0.02.sh),
           ],
