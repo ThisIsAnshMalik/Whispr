@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whispr_app/core/common/common_app_bar.dart';
 import 'package:whispr_app/core/common/common_bg_widget.dart';
 import 'package:whispr_app/core/common/common_snackbar.dart';
 import 'package:whispr_app/core/controllers/posts_controller.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
+import 'package:whispr_app/features/dashboard/dashboard_screen.dart';
 import 'package:whispr_app/features/share_confession/widgets/allow_comments_section.dart';
 import 'package:whispr_app/features/share_confession/widgets/agreement_checkboxes.dart';
 import 'package:whispr_app/features/share_confession/widgets/caption_section.dart';
@@ -85,7 +87,7 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
           _consentModeration = false;
         });
         // Navigate to home tab
-        // The DashboardScreen handles the bottom navigation
+        Get.offAll(() => const DashboardScreen(index: 0));
       }
     } finally {
       if (mounted) {
