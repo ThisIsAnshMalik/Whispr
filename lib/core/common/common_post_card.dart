@@ -269,7 +269,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
               if (widget.isMyPost)
-                GestureDetector(
+                InkWell(
                   onTapDown: (details) {
                     final position = RelativeRect.fromLTRB(
                       details.globalPosition.dx,
@@ -326,7 +326,11 @@ class _PostCardState extends State<PostCard> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.all(0.01.sh),
+                    // color: AppPallete.whiteColor.withOpacity(0.1),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 0.01.sh,
+                      vertical: 0.02.sh,
+                    ),
                     child: SvgPicture.asset(IconAssets.menuIcon),
                   ),
                 ),
