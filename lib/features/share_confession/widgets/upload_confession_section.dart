@@ -11,6 +11,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:whispr_app/core/assets/icon_assets.dart';
 import 'package:whispr_app/core/common/common_text.dart';
 import 'package:whispr_app/core/helpers/media_picker_helper.dart';
+import 'package:whispr_app/core/common/media_player_screen.dart';
 import 'package:whispr_app/core/theme/color/app_pallete.dart';
 
 enum ConfessionMediaType { video, audio }
@@ -334,6 +335,14 @@ class _AudioPreviewTile extends StatelessWidget {
 
   const _AudioPreviewTile({required this.file, required this.onClear});
 
+  void _playAudio(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MediaPlayerScreen(mediaPath: file.path, isVideo: false),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = file.path.split('/').last;
@@ -351,40 +360,81 @@ class _AudioPreviewTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 0.12.sh,
-              height: 0.12.sh,
-              decoration: BoxDecoration(
-                color: AppPallete.primaryColor.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.audiotrack_rounded,
-                color: AppPallete.primaryColor,
-                size: 0.06.sh,
+            // Play button with audio icon
+            GestureDetector(
+              onTap: () => _playAudio(context),
+              child: Container(
+                width: 0.12.sh,
+                height: 0.12.sh,
+                decoration: BoxDecoration(
+                  color: AppPallete.primaryColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.audiotrack_rounded,
+                      color: AppPallete.primaryColor.withOpacity(0.5),
+                      size: 0.05.sh,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(0.01.sh),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppPallete.primaryColor,
+                      ),
+                      child: Icon(
+                        Icons.play_arrow_rounded,
+                        color: AppPallete.whiteColor,
+                        size: 0.025.sh,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(width: 0.03.sw),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CommonText(
-                    text: 'Audio confession',
-                    fontSize: 0.014.sh,
-                    fontWeight: FontWeight.w600,
-                    color: AppPallete.whiteColor,
-                  ),
-                  SizedBox(height: 0.004.sh),
-                  CommonText(
-                    text: name,
-                    fontSize: 0.012.sh,
-                    fontWeight: FontWeight.w500,
-                    color: AppPallete.whiteColor.withOpacity(0.8),
-                    maxLine: 1,
-                  ),
-                ],
+              child: GestureDetector(
+                onTap: () => _playAudio(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CommonText(
+                      text: 'Audio confession',
+                      fontSize: 0.014.sh,
+                      fontWeight: FontWeight.w600,
+                      color: AppPallete.whiteColor,
+                    ),
+                    SizedBox(height: 0.004.sh),
+                    CommonText(
+                      text: name,
+                      fontSize: 0.012.sh,
+                      fontWeight: FontWeight.w500,
+                      color: AppPallete.whiteColor.withOpacity(0.8),
+                      maxLine: 1,
+                    ),
+                    SizedBox(height: 0.006.sh),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.play_circle_outline,
+                          color: AppPallete.primaryColor,
+                          size: 0.016.sh,
+                        ),
+                        SizedBox(width: 0.01.sw),
+                        CommonText(
+                          text: 'Tap to play',
+                          fontSize: 0.011.sh,
+                          fontWeight: FontWeight.w500,
+                          color: AppPallete.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Material(
@@ -443,6 +493,15 @@ class _VideoPreviewTileState extends State<_VideoPreviewTile> {
     } catch (_) {}
   }
 
+  void _playVideo(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            MediaPlayerScreen(mediaPath: widget.file.path, isVideo: true),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -477,17 +536,20 @@ class _VideoPreviewTileState extends State<_VideoPreviewTile> {
             ),
             // Center play button
             Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100.r),
-                child: Container(
-                  padding: EdgeInsets.all(0.02.sh),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppPallete.whiteColor.withOpacity(0.4),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
-                    child: SvgPicture.asset(IconAssets.playIcon),
+              child: GestureDetector(
+                onTap: () => _playVideo(context),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100.r),
+                  child: Container(
+                    padding: EdgeInsets.all(0.02.sh),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppPallete.whiteColor.withOpacity(0.4),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 1, sigmaY: 00),
+                      child: SvgPicture.asset(IconAssets.playIcon),
+                    ),
                   ),
                 ),
               ),
