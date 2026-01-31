@@ -130,16 +130,18 @@ class _ShareConfessionScreenState extends State<ShareConfessionScreen> {
                       ),
                       child: Column(
                         children: [
-                          VisibilitySection(
-                            value: _visibility,
-                            onChanged: (v) => setState(() => _visibility = v),
-                          ),
-                          SizedBox(height: 0.02.sh),
-                          Divider(
-                            color: AppPallete.whiteColor.withOpacity(0.2),
-                            height: 1,
-                          ),
-                          SizedBox(height: 0.02.sh),
+                          if (_mediaType == ConfessionMediaType.video) ...[
+                            VisibilitySection(
+                              value: _visibility,
+                              onChanged: (v) => setState(() => _visibility = v),
+                            ),
+                            SizedBox(height: 0.02.sh),
+                            Divider(
+                              color: AppPallete.whiteColor.withOpacity(0.2),
+                              height: 1,
+                            ),
+                            SizedBox(height: 0.02.sh),
+                          ],
                           AllowCommentsSection(
                             value: _allowComments,
                             onChanged: (v) =>
